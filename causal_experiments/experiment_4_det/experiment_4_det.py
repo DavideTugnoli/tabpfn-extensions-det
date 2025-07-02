@@ -10,6 +10,7 @@ The CPDAG should be provided as input (e.g., from external causal discovery).
 """
 import sys
 import os
+os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
 import torch
 import pandas as pd
 import numpy as np

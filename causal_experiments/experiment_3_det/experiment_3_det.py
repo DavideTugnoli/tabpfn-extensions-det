@@ -15,6 +15,7 @@ Usage:
 """
 import sys
 import os
+os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
 import torch
 import pandas as pd
 import numpy as np
