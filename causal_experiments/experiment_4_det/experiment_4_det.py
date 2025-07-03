@@ -367,6 +367,20 @@ def run_experiment_4(cpdag, config=None, output_dir="experiment_4_results", resu
             for train_idx, train_size in enumerate(config['train_sizes'][start_train_idx:], start_train_idx):
                 rep_start = start_rep if train_idx == start_train_idx else 0
                 for rep in range(rep_start, config['n_repetitions']):
+                    # Isolamento: reset del seed per ogni DAG, train_size, repetition
+                    seed = config['random_seed_base'] + rep
+                    torch.manual_seed(seed)
+                    if torch.cuda.is_available():
+                        torch.cuda.manual_seed_all(seed)
+                    try:
+                        torch.use_deterministic_algorithms(True)
+                    except AttributeError:
+                        pass
+                    if torch.cuda.is_available():
+                        torch.backends.cudnn.deterministic = True
+                        torch.backends.cudnn.benchmark = False
+                    np.random.seed(seed)
+                    print(f"[DEBUG] Torch random check (train_size={train_size}, rep={rep}, dag_type={dag_level}):", torch.rand(1).item())
                     result = run_single_configuration(
                         train_size, dag_level, rep, config, X_test,
                         dag_categories, col_names, categorical_cols, no_dag_column_order,
