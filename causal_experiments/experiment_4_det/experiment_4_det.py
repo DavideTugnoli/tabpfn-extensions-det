@@ -237,18 +237,6 @@ def run_single_configuration(train_size, dag_level, repetition, config,
                            X_test, dag_categories, col_names, categorical_cols, no_dag_column_order, data_samples_dir=None, hash_check_dict=None):
     print(f"    DAG level: {dag_level}, Rep: {repetition+1}/{config['n_repetitions']}")
     seed = config['random_seed_base'] + repetition
-    torch.manual_seed(seed)
-    if torch.cuda.is_available():
-        torch.cuda.manual_seed_all(seed)
-    # Set PyTorch to deterministic mode for reproducibility
-    try:
-        torch.use_deterministic_algorithms(True)
-    except AttributeError:
-        pass  # For older PyTorch versions
-    if torch.cuda.is_available():
-        torch.backends.cudnn.deterministic = True
-        torch.backends.cudnn.benchmark = False
-    np.random.seed(seed)
     X_train = generate_scm_data(
         n_samples=train_size,
         random_state=seed,
@@ -367,7 +355,7 @@ def run_experiment_4(cpdag, config=None, output_dir="experiment_4_results", resu
             for train_idx, train_size in enumerate(config['train_sizes'][start_train_idx:], start_train_idx):
                 rep_start = start_rep if train_idx == start_train_idx else 0
                 for rep in range(rep_start, config['n_repetitions']):
-                    # Isolamento: reset del seed per ogni DAG, train_size, repetition
+                    # Set deterministic seed for reproducibility
                     seed = config['random_seed_base'] + rep
                     torch.manual_seed(seed)
                     if torch.cuda.is_available():
@@ -380,7 +368,6 @@ def run_experiment_4(cpdag, config=None, output_dir="experiment_4_results", resu
                         torch.backends.cudnn.deterministic = True
                         torch.backends.cudnn.benchmark = False
                     np.random.seed(seed)
-                    print(f"[DEBUG] Torch random check (train_size={train_size}, rep={rep}, dag_type={dag_level}):", torch.rand(1).item())
                     result = run_single_configuration(
                         train_size, dag_level, rep, config, X_test,
                         dag_categories, col_names, categorical_cols, no_dag_column_order,
