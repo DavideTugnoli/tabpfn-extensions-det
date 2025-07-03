@@ -11,6 +11,7 @@ Usage:
 
 import sys
 import os
+os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
 import torch
 import pandas as pd
 import numpy as np
@@ -296,7 +297,7 @@ def main():
         # Best and worst orderings per metric
         for metric in metric_columns:
             print(f"\n{metric.upper()}:")
-            mean_by_order = results.groupby('order_strategy')[metric].mean()
+            mean_by_order = results.groupby('column_order_strategy')[metric].mean()
             best_order = mean_by_order.idxmin()
             worst_order = mean_by_order.idxmax()
             
