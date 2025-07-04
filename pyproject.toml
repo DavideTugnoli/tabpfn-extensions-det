@@ -13,7 +13,6 @@ dependencies = [
     "tabpfn>=2.0.6",
     "syntheval>=1.6.0",
     "hyperopt>=0.2.7",
-    "fastplot>=1.4.0",
 ]
 
 requires-python = ">=3.9"

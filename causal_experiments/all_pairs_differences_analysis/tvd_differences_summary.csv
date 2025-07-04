@@ -1,7 +1,0 @@
-variable_pair,is_correlated,mean,std,count
-X1-X2,True,0.1296,0.0325,50
-X1-X3,False,0.1465,0.0286,50
-X1-X4,False,0.1345,0.0271,50
-X2-X3,True,0.1771,0.0378,50
-X2-X4,False,0.1628,0.0347,50
-X3-X4,True,0.209,0.0424,50
