@@ -303,7 +303,6 @@ def main():
     else:
         orderings_to_run = [args.order]
 
-    all_results = []
     for ordering in orderings_to_run:
         config = DEFAULT_CONFIG.copy()
         config['column_order_strategy'] = ordering
@@ -315,21 +314,11 @@ def main():
         print(f"Output: {output_dir}")
         print(f"Total iterations: {len(config['train_sizes']) * config['n_repetitions']}")
         print(f"{'='*50}")
-        results = run_experiment_1(
+        run_experiment_1(
             config=config,
             output_dir=output_dir,
             resume=not args.no_resume
         )
-        all_results.append(results)
-    # Combine all results if multiple orderings were run
-    if len(all_results) > 1:
-        combined_results = pd.concat(all_results, ignore_index=True)
-        combined_output_dir = args.output or "experiment_1_combined"
-        combined_output_dir = Path(combined_output_dir)
-        combined_output_dir.mkdir(exist_ok=True)
-        combined_results.to_csv(combined_output_dir / "combined_results.csv", index=False)
-        print(f"\nCombined results saved to: {combined_output_dir}")
-        print(f"Combined results shape: {combined_results.shape}")
     print(f"\nAll experiments completed!")
 
 if __name__ == "__main__":
